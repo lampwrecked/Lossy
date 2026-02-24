@@ -1073,11 +1073,7 @@ swipe-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-
             <span class="ei">&#9834;</span>
             <span class="el" id="lbl-audio">Audio</span>
           </button>
-          <button class="eb ev" id="eb-video" onclick="exportVideo()">
-            <div class="recpip"></div>
-            <span class="ei">&#9654;</span>
-            <span class="el" id="lbl-video">Video</span>
-          </button>
+
           <button class="eb ep" onclick="exportPhoto()">
             <span class="ei">&#11041;</span>
             <span class="el">Snap</span>
@@ -3149,6 +3145,19 @@ var _pollInterval = null;
 
 // ── Upload blob to IPFS then create session ──
 async function initiateMintSession(blob, outputType) {
+  // Compress photo blobs over 2MB to avoid Vercel 4.5MB limit
+  if (outputType === 'photo' && blob.size > 2 * 1024 * 1024) {
+    blob = await new Promise(resolve => {
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        canvas.width = img.width; canvas.height = img.height;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        canvas.toBlob(resolve, 'image/jpeg', 0.75);
+      };
+      img.src = URL.createObjectURL(blob);
+    });
+  }
   var mintBtn   = document.getElementById('modal-mint-btn');
   var addrEl    = document.getElementById('mint-address');
   var copyBtn   = document.getElementById('mint-copy-btn');
@@ -3439,7 +3448,7 @@ function exportVideo(){
       video.style.cssText = 'width:100%;height:100%;object-fit:contain;';
 
       var filename = 'day-after-day-' + Date.now() + '.webm';
-      openExportModal('video', blob, video, filename);
+      openExportModal('audio', blob, video, filename);
       if(btn) btn.classList.remove('recording');
       if(lbl) lbl.textContent='Video';
       if(_vTimer){ clearInterval(_vTimer); _vTimer=null; }
@@ -3501,10 +3510,10 @@ function exportPhoto(){
     img.src = url;
     img.style.cssText = 'width:100%;height:100%;object-fit:contain;';
 
-    var filename = 'day-after-day-' + Date.now() + '.png';
+    var filename = 'day-after-day-' + Date.now() + '.jpg';
     openExportModal('photo', blob, img, filename);
     flashVal('SNAP!');
-  }, 'image/png');
+  }, 'image/jpeg', 0.85);
 }
 
 toggleRecord = function(){ exportAudio(); };
@@ -3952,7 +3961,7 @@ exportPhoto = function() {
 
 var _origExportVideo = exportVideo;
 exportVideo = function() {
-  _origExportVideo();
+  exportAudio(); // video removed — redirect to audio
 };
 
 // Attach metadata to video stop
