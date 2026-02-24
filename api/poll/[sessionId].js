@@ -47,9 +47,12 @@ export default async function handler(req, res) {
     // Check USDC balance on derived payment address
     const connection = getConnection();
     const sessionKeypair = await getSessionKeypair(session.sessionIndex);
-    const balance = await getUsdcBalance(connection, sessionKeypair.publicKey);
 
-    if (balance < REQUIRED_USDC) {
+    // Test mode — skip payment check (add ?test=true to URL)
+    const testMode = req.query.test === 'true';
+    const balance = testMode ? REQUIRED_USDC : await getUsdcBalance(connection, sessionKeypair.publicKey);
+
+    if (!testMode && balance < REQUIRED_USDC) {
       return res.status(200).json({
         status: 'pending',
         paymentAddress: session.paymentAddress,
