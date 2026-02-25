@@ -1,8 +1,6 @@
 {
   "rewrites": [
+    { "source": "/", "destination": "/day-after-day.html" },
     { "source": "/api/:path*", "destination": "/api/:path*" }
-  ],
-  "redirects": [
-    { "source": "/", "destination": "/day-after-day.html", "permanent": false }
   ]
 }
