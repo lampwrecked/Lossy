@@ -246,4 +246,3 @@ async function mintNft(session, buyerWallet) {
     metadataUri,
   };
 }
-```
