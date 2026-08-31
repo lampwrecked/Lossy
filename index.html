@@ -1,1 +1,629 @@
-<meta http-equiv="refresh" content="0;url=/day-after-day.html">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Splinter Cycle &mdash; Lampwrecked</title>
+<meta name="description" content="An object. Its scan. The scan, distorted. The distortion, cast back as light. The light, scattered by surface. The artifact meets the version it has become." />
+<meta property="og:title" content="Splinter Cycle &mdash; Lampwrecked" />
+<meta property="og:description" content="Form, Scan, Distort, Project, Return. The artifact meets the version it has become." />
+<meta property="og:image" content="media/01-sculpture.jpg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400;1,500&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-2: #131313;
+    --fg: #ece8e0;
+    --fg-dim: #807c75;
+    --fg-faint: #4a4844;
+    --line: rgba(236, 232, 224, 0.10);
+    --line-soft: rgba(236, 232, 224, 0.05);
+    --shift-c: rgba(120, 220, 230, 0.55);
+    --shift-m: rgba(230, 110, 160, 0.45);
+    --display: 'Cormorant Garamond', 'Times New Roman', serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --gutter: clamp(16px, 4vw, 48px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* film grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  ::selection { background: var(--fg); color: var(--bg); }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px var(--gutter);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    mix-blend-mode: difference;
+    color: #ffffff;
+  }
+  .topbar a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s;
+    padding-bottom: 2px;
+  }
+  .topbar a:hover { border-color: currentColor; }
+  .topbar .right { font-feature-settings: "tnum"; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 96px var(--gutter) 40px;
+    position: relative;
+  }
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .hero-meta dt { color: var(--fg-faint); margin-bottom: 4px; }
+  .hero-meta dd { color: var(--fg); }
+  .hero-meta div { display: flex; flex-direction: column; }
+
+  .hero-title-wrap {
+    align-self: center;
+    padding: 8vh 0;
+    position: relative;
+  }
+  .hero-title {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(72px, 19vw, 260px);
+    line-height: 0.88;
+    letter-spacing: -0.025em;
+    text-shadow:
+      0.022em 0 0 var(--shift-m),
+      -0.022em 0 0 var(--shift-c);
+    animation: settle 1.6s cubic-bezier(.2,.7,.2,1) 0.2s both;
+  }
+  .hero-title .row { display: block; }
+  .hero-title .row.b {
+    text-align: right;
+    transform: translateX(-0.05em);
+  }
+  @keyframes settle {
+    0% { opacity: 0; transform: translateY(20px); filter: blur(8px); text-shadow: 0.12em 0 0 var(--shift-m), -0.12em 0 0 var(--shift-c); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+
+  .hero-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+  .tagline { color: var(--fg); }
+  .tagline .dot { color: var(--fg-faint); margin: 0 8px; }
+  .scroll-cue { color: var(--fg-dim); display: flex; align-items: center; gap: 8px; }
+  .scroll-cue .arrow {
+    display: inline-block;
+    animation: bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
+  /* ---------- chapters ---------- */
+  section.chapter {
+    padding: clamp(56px, 10vw, 120px) var(--gutter);
+    max-width: 1440px;
+    margin: 0 auto;
+    border-top: 1px solid var(--line);
+  }
+
+  .chapter-head {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 24px;
+    margin-bottom: clamp(40px, 6vw, 72px);
+    align-items: baseline;
+  }
+  .chapter-num {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    padding-top: 0.5em;
+  }
+  .chapter-title {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(36px, 6.5vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+  }
+  .chapter-title .amp {
+    color: var(--fg-dim);
+    font-style: italic;
+  }
+
+  /* ---------- media ---------- */
+  .media {
+    position: relative;
+    background: linear-gradient(135deg, #161616 0%, #0a0a0a 100%);
+    overflow: hidden;
+    display: block;
+  }
+  .media::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.02), transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .media video, .media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: relative;
+    z-index: 0;
+  }
+  .media-4-5 { aspect-ratio: 4 / 5; }
+  .media-9-16 { aspect-ratio: 9 / 16; }
+  .media-16-9 { aspect-ratio: 16 / 9; }
+
+  .media-caption {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+  }
+  .media-caption .idx { color: var(--fg-faint); margin-right: 8px; }
+  .fig { margin: 0; display: block; }
+
+  /* chapter layouts */
+  .layout {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 24px;
+  }
+  .layout > .gutter { grid-column: 1; }
+  .layout > .content { grid-column: 2; }
+
+  .content.single { max-width: 720px; }
+  .content.single-tall { max-width: 460px; }
+  .content.single-wide { max-width: 1000px; }
+  .content.pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .content.mix {
+    display: grid;
+    grid-template-columns: minmax(0, 0.65fr) minmax(0, 1fr);
+    gap: 16px;
+    align-items: end;
+  }
+  .content.mix .media-16-9 {
+    margin-bottom: 0;
+  }
+
+  .step-note {
+    grid-column: 2;
+    margin-top: 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.65;
+    color: var(--fg-dim);
+    max-width: 56ch;
+    letter-spacing: 0.02em;
+  }
+  .step-note::before {
+    content: '⟶ ';
+    color: var(--fg-faint);
+  }
+
+  /* ---------- statement ---------- */
+  .statement {
+    padding: clamp(80px, 14vw, 160px) var(--gutter);
+    max-width: 1440px;
+    margin: 0 auto;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 24px;
+  }
+  .statement-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    padding-top: 0.5em;
+  }
+  .statement-content { max-width: 60ch; }
+  .statement-content p.lead {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(24px, 3.4vw, 44px);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.6em;
+    color: var(--fg);
+  }
+  .statement-content p.lead em {
+    font-style: italic;
+    color: var(--shift-c);
+    background: linear-gradient(180deg, transparent 70%, rgba(120,220,230,0.08) 70%);
+    padding: 0 0.1em;
+  }
+  .statement-content p.sub {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(20px, 2.4vw, 30px);
+    line-height: 1.4;
+    color: var(--fg-dim);
+    margin-bottom: 2.2em;
+  }
+  .statement-content .coda {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--fg);
+    padding-top: 1.4em;
+    border-top: 1px solid var(--line);
+  }
+  .statement-content .coda .dot { color: var(--fg-faint); margin: 0 8px; }
+
+  /* ---------- exhibitions ---------- */
+  .exhibitions {
+    padding: clamp(56px, 10vw, 96px) var(--gutter);
+    max-width: 1440px;
+    margin: 0 auto;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 24px;
+  }
+  .exhibitions-head {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    padding-top: 0.5em;
+  }
+  .exhibitions-list { list-style: none; }
+  .exhibitions-body { display: flex; flex-direction: column; gap: 48px; }
+  .ex-doc { display: block; }
+  .ex-doc .media { max-width: 1000px; }
+  .ex-doc .step-note { margin-top: 18px; }
+  .exhibitions-list li {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+    display: grid;
+    grid-template-columns: 110px 1.4fr 1fr;
+    gap: 24px;
+    align-items: baseline;
+  }
+  .exhibitions-list li:first-child { border-top: 1px solid var(--line); }
+  .ex-date {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+  }
+  .ex-name {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(24px, 3.4vw, 40px);
+    line-height: 1.15;
+    color: var(--fg);
+  }
+  .ex-kind {
+    display: block;
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    margin-top: 6px;
+  }
+  .ex-meta {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    text-align: right;
+  }
+
+  /* ---------- footer ---------- */
+  footer {
+    padding: 64px var(--gutter) 40px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 24px;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+  }
+  footer a {
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s;
+    padding-bottom: 2px;
+  }
+  footer a:hover { border-color: currentColor; }
+  .foot-mid { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 800px) {
+    .topbar { font-size: 9.5px; padding: 14px var(--gutter); letter-spacing: 0.15em; }
+    .hero { padding-top: 80px; }
+    .hero-meta { grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+    .hero-title { font-size: clamp(64px, 22vw, 140px); }
+    .chapter-head, .layout, .statement, .exhibitions, footer {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .layout > .content,
+    .layout > .gutter { grid-column: 1; }
+    .layout > .gutter { display: none; }
+    .content.pair, .content.mix { grid-template-columns: 1fr; }
+    .step-note { grid-column: 1; margin-top: 6px; }
+    .exhibitions-list li {
+      grid-template-columns: 1fr;
+      gap: 6px;
+      padding: 20px 0;
+    }
+    .ex-meta { text-align: left; }
+    footer { grid-template-columns: 1fr; padding: 48px var(--gutter) 32px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- top bar -->
+<div class="topbar">
+  <a href="https://lampwrecked.art">&larr; Lampwrecked</a>
+  <span class="right">Splinter Cycle</span>
+</div>
+
+<!-- hero -->
+<section class="hero">
+  <dl class="hero-meta">
+    <div><dt>Medium</dt><dd>Glass / 3D / Light</dd></div>
+    <div><dt>Phase</dt><dd>Ongoing</dd></div>
+    <div><dt>Span</dt><dd>2008&mdash;2026</dd></div>
+  </dl>
+  <div class="hero-title-wrap">
+    <h1 class="hero-title">
+      <span class="row a">Splinter</span>
+      <span class="row b">Cycle</span>
+    </h1>
+  </div>
+  <div class="hero-foot">
+    <div class="tagline">
+      Form<span class="dot">&middot;</span>Scan<span class="dot">&middot;</span>Distort<span class="dot">&middot;</span>Project<span class="dot">&middot;</span>Return&nbsp;&nbsp;<span class="arrow">&darr;</span>
+    </div>
+  </div>
+</section>
+
+<!-- 01 FORM -->
+<section class="chapter" id="form">
+  <div class="chapter-head">
+    <span class="chapter-num">01 &nbsp;/&nbsp; Form</span>
+    <h2 class="chapter-title">The artifact.</h2>
+  </div>
+  <div class="layout">
+    <span class="gutter"></span>
+    <div class="content single">
+      <div class="media media-4-5">
+        <img src="media/01-sculpture.jpg" alt="Broken glass sculpture &mdash; still photograph" loading="lazy" />
+      </div>
+      <span class="media-caption"><span class="idx">01</span>Sculpture &middot; Still</span>
+      <p class="step-note">A broken glass sculpture, photographed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 SCAN -->
+<section class="chapter" id="scan">
+  <div class="chapter-head">
+    <span class="chapter-num">02 &nbsp;/&nbsp; Scan</span>
+    <h2 class="chapter-title">Its data double.</h2>
+  </div>
+  <div class="layout">
+    <span class="gutter"></span>
+    <div class="content single">
+      <div class="media media-4-5">
+        <video src="media/02-scan.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      </div>
+      <span class="media-caption"><span class="idx">02</span>3D Scan &middot; Video</span>
+      <p class="step-note">Photogrammetric capture &mdash; the object reborn as mesh.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 DISTORT -->
+<section class="chapter" id="distort">
+  <div class="chapter-head">
+    <span class="chapter-num">03 &nbsp;/&nbsp; Distort</span>
+    <h2 class="chapter-title">Manipulated as form.</h2>
+  </div>
+  <div class="layout">
+    <span class="gutter"></span>
+    <div class="content single-tall">
+      <div class="media media-9-16">
+        <video src="media/03-manipulation.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      </div>
+      <span class="media-caption"><span class="idx">03</span>3D Manipulation &middot; Video</span>
+      <p class="step-note">Mesh dragged, folded, fractured further in software.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 PROJECT -->
+<section class="chapter" id="project">
+  <div class="chapter-head">
+    <span class="chapter-num">04 &nbsp;/&nbsp; Project</span>
+    <h2 class="chapter-title">Light from form.</h2>
+  </div>
+  <div class="layout">
+    <span class="gutter"></span>
+    <div class="content pair">
+      <figure class="fig">
+        <div class="media media-16-9">
+          <video src="media/04a-projected-form.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        </div>
+        <figcaption class="media-caption"><span class="idx">04a</span>Projected Form</figcaption>
+      </figure>
+      <figure class="fig">
+        <div class="media media-16-9">
+          <video src="media/04b-projected-form.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        </div>
+        <figcaption class="media-caption"><span class="idx">04b</span>Projected Form</figcaption>
+      </figure>
+    </div>
+    <p class="step-note">The distorted scan returned to light &mdash; two studies.</p>
+  </div>
+</section>
+
+<!-- 05 RETURN -->
+<section class="chapter" id="return">
+  <div class="chapter-head">
+    <span class="chapter-num">05 &nbsp;/&nbsp; Return</span>
+    <h2 class="chapter-title">Held in superposition.</h2>
+  </div>
+  <div class="layout">
+    <span class="gutter"></span>
+    <div class="content single-wide">
+      <div class="media media-16-9">
+        <video src="media/05-projection-on-sculpture.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      </div>
+      <span class="media-caption"><span class="idx">05</span>Projection on Sculpture</span>
+      <p class="step-note">The data double cast back onto the artifact it came from.</p>
+    </div>
+  </div>
+</section>
+
+<!-- statement -->
+<section class="statement">
+  <span class="statement-label">// Statement</span>
+  <div class="statement-content">
+    <p class="lead">An object. Its scan. The scan, distorted. The distortion, cast back as light. The light, scattered by surface.</p>
+    <p class="sub">The artifact meets the version it has become.</p>
+    <p class="coda">Form<span class="dot">&middot;</span>Scan<span class="dot">&middot;</span>Distort<span class="dot">&middot;</span>Project<span class="dot">&middot;</span>Return</p>
+  </div>
+</section>
+
+<!-- exhibitions -->
+<section class="exhibitions">
+  <span class="exhibitions-head">// Shown at</span>
+  <div class="exhibitions-body">
+    <ul class="exhibitions-list">
+      <li>
+        <span class="ex-date">Nov 2025</span>
+        <span class="ex-name">Return to Form <span class="ex-kind">Group Exhibition</span></span>
+        <span class="ex-meta">Burrito DAO &middot; Luma Studios &mdash; Manhattan, NY</span>
+      </li>
+      <li>
+        <span class="ex-date">Dec 2025</span>
+        <span class="ex-name">Listen to Your Heart <span class="ex-kind">Group Exhibition</span></span>
+        <span class="ex-meta">One Love DAO &middot; Miami Art Week &mdash; Miami, FL</span>
+      </li>
+    </ul>
+    <div class="ex-doc">
+      <div class="media media-16-9">
+        <video src="media/06-artweek-feature.mp4" autoplay muted loop playsinline preload="metadata"></video>
+      </div>
+      <span class="media-caption"><span class="idx">06</span>Installation View &middot; Miami Art Week</span>
+      <p class="step-note">Seen in One Love DAO Community Showcase, December 2025.</p>
+    </div>
+  </div>
+</section>
+
+<!-- footer -->
+<footer>
+  <span>Lampwrecked &copy; 2026</span>
+  <div class="foot-mid">
+    <a href="https://lampwrecked.art">lampwrecked.art &nearr;</a>
+    <a href="https://x.com/lampwrecked_">@lampwrecked_ &nearr;</a>
+    <a href="https://instagram.com/lampwrecked">@lampwrecked &nearr;</a>
+  </div>
+  <span>Splinter Cycle</span>
+</footer>
+
+</body>
+</html>
