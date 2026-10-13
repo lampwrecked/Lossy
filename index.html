@@ -302,18 +302,7 @@ body {
   margin-bottom: 10px;
 }
 
-/* Back button */
-.quiz-back-btn {
-  background: none;
-  border: 1px solid rgba(255,128,32,0.25);
-  color: rgba(255,128,32,0.6);
-  font-family: 'Courier Prime', monospace;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  padding: 6px 14px;
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
-}
+/* Back button — shares its sizing with Restart/Skip below (.quiz-nav-btn) */
 .quiz-back-btn:hover {
   color: rgba(255,128,32,1);
   border-color: rgba(255,128,32,0.6);
@@ -416,22 +405,39 @@ body {
 #synth-restart-btn:active { transform:rotate(-180deg); }
 
 /* restart button */
-.quiz-restart, .quiz-skip {
+/* Bottom nav row: Back / Restart / Skip — one rule so all three match */
+.quiz-nav-row {
+  display:flex;
+  gap:12px;
+  align-items:stretch;
+  margin-top:12px;
+}
+.quiz-nav-btn,
+.quiz-back-btn, .quiz-restart, .quiz-skip {
   position:relative;
+  flex:1 1 0;                 /* equal widths */
+  min-width:0;
+  min-height:40px;            /* equal heights */
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   background:transparent;
   border:1px solid rgba(var(--accent-rgb),0.3);
   color:rgba(var(--accent-rgb),0.5);
   font-family:'Courier Prime',monospace;
-  font-size:clamp(8px,1.8vw,10px);
+  font-size:clamp(9px,2vw,11px);
   letter-spacing:0.2em;
   text-transform:uppercase;
-  padding:6px 16px;
+  line-height:1;
+  padding:0 10px;
+  margin:0;
+  white-space:nowrap;
   cursor:pointer;
   touch-action:manipulation;
   transition:background .2s, border-color .2s, box-shadow .2s, color .2s;
   z-index:10;
-  margin-top:12px;
 }
+.quiz-back-btn:hover, .quiz-back-btn:active,
 .quiz-restart:hover, .quiz-restart:active,
 .quiz-skip:hover, .quiz-skip:active {
   background:rgba(var(--accent-rgb),0.08);
@@ -439,7 +445,7 @@ body {
   color:var(--amber);
 }
 .quiz-restart.hidden-until-q2 { display:none; }
-.quiz-restart.visible-btn { display:block; }
+.quiz-restart.visible-btn { display:inline-flex; }
 
 /* corner rivet marks */
 #quiz-screen::before, #quiz-screen::after {
@@ -1258,7 +1264,7 @@ swipe-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-
     <div class="quiz-progress">
       <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
     </div>
-    <div style="display:flex; gap:12px; align-items:center; margin-top:12px;">
+    <div class="quiz-nav-row">
       <button class="quiz-back-btn" id="quiz-back-btn" onclick="QUIZ.goBack()" style="visibility:hidden">← Back</button>
       <button class="quiz-restart" id="quiz-restart-btn" onclick="goToTitleScreen()" title="Return to title">↺ Restart</button>
       <button class="quiz-skip" onclick="skipToSynth()" title="Skip and randomize">⚄ Skip</button>
